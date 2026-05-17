@@ -2,7 +2,29 @@
 │   ├── [(public)]
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
+│   ├── [admin]
+│   │   ├── [brokers]
+│   │   │   ├── [import]
+│   │   │   │   ├── page.tsx
+│   │   │   ├── [new]
+│   │   │   │   ├── page.tsx
+│   │   │   ├── [[uuid]]
+│   │   │   ├── BrokerForm.tsx
+│   │   │   ├── BrokersTable.tsx
+│   │   │   ├── page.tsx
+│   │   ├── [login]
+│   │   │   ├── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
 │   ├── [api]
+│   │   ├── [admin]
+│   │   │   ├── [auth]
+│   │   │   │   ├── route.ts
+│   │   │   ├── [brokers]
+│   │   │   │   ├── [import]
+│   │   │   │   │   ├── route.ts
+│   │   │   │   ├── [[uuid]]
+│   │   │   │   ├── route.ts
 │   │   ├── [brokers]
 │   │   │   ├── [list]
 │   │   │   │   ├── route.ts
@@ -14,9 +36,16 @@
 ├── [components]
 │   ├── [broker]
 │   │   ├── BrokerCard.tsx
+│   ├── [layout]
+│   │   ├── Footer.tsx
+│   │   ├── Navbar.tsx
 │   ├── [ranking]
 │   │   ├── BrokerRankings.tsx
 ├── [lib]
+│   ├── [admin]
+│   │   ├── auth.ts
+│   │   ├── csvParser.ts
+│   │   ├── queries.ts
 │   ├── [brokers]
 │   │   ├── queries.ts
 │   ├── [shared]
@@ -46,6 +75,7 @@
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── eslint.config.mjs
+├── middleware.ts
 ├── next-env.d.ts
 ├── next.config.ts
 ├── package-lock.json
