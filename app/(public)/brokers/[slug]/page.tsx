@@ -37,7 +37,7 @@ export default async function BrokerDetailPage({ params }: Props) {
   const review = await getBrokerReview(broker.uuid);
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <div className="py-8">
       <BrokerDetailCard broker={broker} />
 
       <div className="mt-12 max-w-[1240px] mx-auto">
@@ -56,6 +56,6 @@ export default async function BrokerDetailPage({ params }: Props) {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }
