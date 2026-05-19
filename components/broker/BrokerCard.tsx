@@ -155,6 +155,10 @@ export default function BrokerCard({ broker, rank, idx, liveCount }: BrokerCardP
           {isInst || !broker.max_leverage ? <span className="mtr-dbox-value muted">—</span> : <span className="mtr-dbox-value">1:{broker.max_leverage.toLocaleString()}</span>}
         </div>
         <div className="mtr-dbox">
+          <div className="mtr-dbox-label">Instruments</div>
+          {isInst || !broker.instruments ? <span className="mtr-dbox-value muted">—</span> : <span className="mtr-dbox-value">{formatCommaText(broker.instruments)}</span>}
+        </div>
+        <div className="mtr-dbox">
           <div className="mtr-dbox-label">HQ</div>
           <span className="mtr-dbox-value" style={{ fontSize: '11px' }}>{broker.hq_country ? formatCommaText(broker.hq_country) : '—'}</span>
         </div>

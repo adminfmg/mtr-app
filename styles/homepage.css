@@ -68,6 +68,7 @@
 .mtr-dbox-reg { min-width: 100px; flex: 1.5; }
 .mtr-lic-tags { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; margin-top: 2px; }
 .mtr-lic-tag { display: inline-block; padding: 1px 5px; background: var(--mtr-blue-bg); border: 1px solid var(--mtr-blue-bd); border-radius: 3px; font-size: 9px; font-weight: 600; color: var(--mtr-blue-tag); }
+
 .mtr-score-col { width: 80px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 8px; border-left: 1px solid var(--mtr-border); }
 .mtr-score-lbl { width: 100%; text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: .4px; color: var(--mtr-muted); font-weight: 600; margin-bottom: 2px; }
 .mtr-score-val { font-size: 24px; font-weight: 800; line-height: 1; }
@@ -106,8 +107,24 @@
 .mtr-empty { text-align: center; padding: 60px 24px; color: var(--mtr-muted); font-size: 14px; font-weight: 500; }
 
 @keyframes mtrFadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@media (max-width: 1100px) { .mtr-dbox:nth-child(n+5) { display: none; } .mtr-identity { width: 140px; } }
-@media (max-width: 860px) { .mtr-dbox:nth-child(n+4) { display: none; } .mtr-identity { width: 130px; } .mtr-actions { width: 140px; } .mtr-btn { width: 100%; padding: 6px 4px; } }
+
+/* Tablet/laptop kecil — kecilin padding box biar 6 box muat */
+@media (max-width: 1100px) {
+  .mtr-identity { width: 130px; }
+  .mtr-dbox { padding: 6px 6px; min-width: 60px; }
+  .mtr-dbox-label { font-size: 8.5px; }
+  .mtr-dbox-value { font-size: 11px; }
+}
+@media (max-width: 860px) {
+  .mtr-identity { width: 120px; }
+  .mtr-dbox { padding: 6px 4px; min-width: 54px; }
+  .mtr-actions { width: 130px; }
+  .mtr-btn { width: 100%; padding: 6px 4px; }
+}
+
+/* =====================================================
+   MOBILE (<= 680px) — full responsive layout match WP
+   ===================================================== */
 @media (max-width: 680px) {
   .mtr-info-desktop { display: none; } .mtr-info-mobile { display: inline; }
   .mtr-rankings-wrap { padding: 0 8px 32px; }
@@ -117,15 +134,35 @@
   .mtr-hero-stat  { padding: 11px 6px; }
   .mtr-hero-stat-num { font-size: 18px; }
   .mtr-hero-stat-label { font-size: 9px; letter-spacing: .3px; }
-  .mtr-filters { padding: 10px 12px; flex-wrap: wrap; }
-  .mtr-search-wrap { flex: 1 1 100%; margin-bottom: 4px; }
-  .mtr-native-select { flex: 1 1 30%; min-width: 0; }
-  .mtr-sort-group { flex: 0 1 auto; justify-content: flex-start; margin-top: 4px; }
-  .mtr-count-label { flex: 1 1 auto; display: flex; align-items: center; justify-content: flex-end; margin-top: 4px; }
+
+  /* Filter bar:
+     row 1: search (full width)
+     row 2: 3 dropdowns sejajar
+     row 3: sort buttons + count label */
+  .mtr-filters { padding: 10px 12px; flex-wrap: wrap; gap: 6px; }
+  .mtr-search-wrap { flex: 1 1 100%; width: 100%; }
+  .mtr-native-select {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    padding: 0 22px 0 8px;
+    font-size: 11.5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .mtr-sort-group { flex: 0 1 auto; justify-content: flex-start; }
+  .mtr-count-label { flex: 1 1 auto; display: flex; align-items: center; justify-content: flex-end; }
+
   .mtr-pagination-wrap { flex-direction: row; gap: 6px; padding: 8px 10px; }
   .mtr-pagination-info { display: none; }
   .mtr-per-page-label { display: none; }
   .mtr-per-page-wrap { margin-left: auto; }
+
+  /* Card layout:
+     row 1: rank + logo + identity + score
+     row 2: 6 data boxes (3-col grid)
+     row 3: View Hub | Visit Broker | 👍 vote (semua dalam satu baris) */
   .mtr-card { flex-wrap: wrap; align-items: stretch; min-height: unset; border-radius: 12px; margin-bottom: 2px; }
   .mtr-accent { align-self: stretch; order: 1; }
   .mtr-rank-col { order: 2; width: auto; padding: 12px 2px 12px 8px; }
@@ -133,19 +170,70 @@
   .mtr-identity { order: 4; flex: 1 1 auto; width: auto; min-width: 0; border-right: none; padding: 11px 6px 11px 4px; }
   .mtr-name { font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .mtr-score-col { order: 5; width: auto; padding: 11px 12px 11px 6px; border-left: none; align-items: flex-end; }
-  .mtr-boxes { order: 6; flex: 1 0 100%; border-top: 1px solid var(--mtr-border); padding: 9px 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .mtr-dbox:nth-child(n+4), .mtr-dbox:nth-child(n+5) { display: flex; }
+
+  /* Data boxes — semua 6 box visible, 3-col grid */
+  .mtr-boxes {
+    order: 6;
+    flex: 1 0 100%;
+    border-top: 1px solid var(--mtr-border);
+    padding: 9px 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    overflow: visible;
+  }
+  .mtr-dbox { min-width: 0; padding: 6px 8px; }
   .mtr-dbox-reg { grid-column: auto; }
-  .mtr-vote-col { order: 7; flex: 1 0 100%; width: 100%; border-top: 1px solid var(--mtr-border); padding: 8px 10px; }
-  .mtr-actions { order: 8; flex: 1 0 100%; border-left: none; border-top: 1px solid var(--mtr-border); flex-direction: row; justify-content: space-between; padding: 9px 10px; gap: 4px; }
-  .mtr-btn { flex: 1 1 32%; padding: 8px 0; font-size: 11px; }
-  .mtr-thumb-btn { padding: 8px 16px; font-size: 12px; }
+
+  /* Actions row — View Hub | Visit Broker | jempol vote, sejajar 3 kolom.
+     KUNCI: .mtr-actions + .mtr-vote-col masing-masing punya order:7,
+     dan dipush ke baris baru pakai trik border-top di .mtr-actions.
+     .mtr-vote-col flex sebagai sibling, sejajar di kanan. */
+  .mtr-actions {
+    order: 7;
+    flex: 1 1 auto;
+    border-left: none;
+    border-top: 1px solid var(--mtr-border);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    padding: 9px 4px 9px 10px;
+    gap: 6px;
+  }
+  .mtr-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 0;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+  .mtr-vote-col {
+    order: 8;
+    flex: 0 0 auto;
+    width: auto;
+    padding: 9px 10px 9px 0;
+    border-left: none;
+    border-top: 1px solid var(--mtr-border);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mtr-vote-col .mtr-thumb-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    min-height: unset;
+    height: 100%;
+  }
 }
 @media (max-width: 380px) {
   .mtr-main-hero h1 { font-size: 28px; }
   .mtr-hero-stat-num { font-size: 16px; }
   .mtr-name { font-size: 13px; }
   .mtr-score-val { font-size: 20px; }
+  .mtr-vote-col .mtr-thumb-btn { padding: 8px 8px; font-size: 11px; }
 }
 
 /* =====================================================
@@ -168,37 +256,12 @@
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
-
-.mtr-tooltip-content[data-state="delayed-open"][data-side="top"] {
-  animation-name: mtrTooltipSlideUp;
-}
-.mtr-tooltip-content[data-state="delayed-open"][data-side="bottom"] {
-  animation-name: mtrTooltipSlideDown;
-}
-.mtr-tooltip-content[data-state="delayed-open"][data-side="left"] {
-  animation-name: mtrTooltipSlideLeft;
-}
-.mtr-tooltip-content[data-state="delayed-open"][data-side="right"] {
-  animation-name: mtrTooltipSlideRight;
-}
-
-.mtr-tooltip-arrow {
-  fill: #1A2E45;
-}
-
-@keyframes mtrTooltipSlideUp {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes mtrTooltipSlideDown {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes mtrTooltipSlideLeft {
-  from { opacity: 0; transform: translateX(4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes mtrTooltipSlideRight {
-  from { opacity: 0; transform: translateX(-4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
+.mtr-tooltip-content[data-state="delayed-open"][data-side="top"] { animation-name: mtrTooltipSlideUp; }
+.mtr-tooltip-content[data-state="delayed-open"][data-side="bottom"] { animation-name: mtrTooltipSlideDown; }
+.mtr-tooltip-content[data-state="delayed-open"][data-side="left"] { animation-name: mtrTooltipSlideLeft; }
+.mtr-tooltip-content[data-state="delayed-open"][data-side="right"] { animation-name: mtrTooltipSlideRight; }
+.mtr-tooltip-arrow { fill: #1A2E45; }
+@keyframes mtrTooltipSlideUp   { from { opacity: 0; transform: translateY(4px); }  to { opacity: 1; transform: translateY(0); } }
+@keyframes mtrTooltipSlideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes mtrTooltipSlideLeft { from { opacity: 0; transform: translateX(4px); }  to { opacity: 1; transform: translateX(0); } }
+@keyframes mtrTooltipSlideRight{ from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
