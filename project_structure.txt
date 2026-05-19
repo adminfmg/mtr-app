@@ -1,5 +1,7 @@
 ﻿├── [app]
 │   ├── [(public)]
+│   │   ├── [awards]
+│   │   │   ├── page.tsx
 │   │   ├── [brokers]
 │   │   │   ├── [[slug]]
 │   │   ├── layout.tsx
@@ -54,6 +56,9 @@
 │   │   ├── BrokerRankings.tsx
 │   ├── [ui]
 │   │   ├── Tooltip.tsx
+├── [config]
+│   ├── footer.ts
+│   ├── navbar.ts
 ├── [lib]
 │   ├── [admin]
 │   │   ├── auth.ts
@@ -83,10 +88,13 @@
 │   ├── env.ts
 │   ├── structure.ts
 ├── [styles]
+│   ├── awards.css
 │   ├── broker-detail.css
 │   ├── homepage.css
 ├── [types]
 │   ├── broker.ts
+│   ├── footer.ts
+│   ├── navbar.ts
 ├── .env.local
 ├── AGENTS.md
 ├── CLAUDE.md
