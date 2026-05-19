@@ -178,7 +178,8 @@ a.mtr-trust-person:hover { opacity: 0.7; transform: translateY(-2px); }
   border-radius: var(--mtr-radius);
   border: 1px solid var(--mtr-border);
   background: #0F1825;
-  font-size: 16px; line-height: 1.6; color: var(--mtr-text-muted);
+  font-size: 15px; line-height: 1.6; color: var(--mtr-text-muted);
+  text-align: justify;
 }
 .verdict strong { color: #ffcc00; font-weight: 600; }
 
@@ -192,10 +193,14 @@ a.mtr-trust-person:hover { opacity: 0.7; transform: translateY(-2px); }
   background: #0F1825;
   border: 1px solid var(--mtr-border);
   border-radius: var(--mtr-radius);
-  padding: 10px; height: 135px;
-  display: flex; flex-direction: column;
-  justify-content: flex-start;
-  text-align: center; align-items: center;
+  padding: 10px; 
+  height: 135px;
+  display: flex; 
+  flex-direction: column;
+  justify-content: top-center;
+  gap: 8px;
+  text-align: center; 
+  align-items: center;
 }
 
 .stat.span-2 { grid-column: span 2; }
