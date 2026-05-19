@@ -9,9 +9,9 @@ interface Props {
 }
 
 const statusOptions = [
+  { value: '', label: 'All Status' },
   { value: 'legitimate', label: 'Retail Brokers' },
-  { value: '', label: 'All (incl. Institutional)' },
-  { value: 'institution', label: 'Institutional Only' },
+  { value: 'institution', label: 'Institutions' },
 ];
 
 /* =====================================================
@@ -55,18 +55,19 @@ function CustomDropdown({ options, value, onChange, id, placeholder, activeDropd
   }, [options, localSearch]);
 
   return (
-    <div ref={dropdownRef} className="relative flex-1 min-w-[140px] font-['Gantari'] select-none">
+    // FIX: Tambah max-[680px]:basis-0 biar mereka bagi rata 33.3% persis di mobile
+    <div ref={dropdownRef} className="relative flex-1 min-w-[140px] max-[680px]:min-w-0 max-[680px]:basis-0 font-['Gantari'] select-none">
       <div
         onClick={() => setActiveDropdown(isOpen ? null : id)}
         className={`
-          w-full h-[36px] px-3 rounded-lg bg-[var(--mtr-inner)] border text-[12px] font-medium text-[var(--mtr-text)]
+          w-full h-[36px] px-3 max-[680px]:px-1.5 rounded-lg bg-[var(--mtr-inner)] border text-[12px] max-[680px]:text-[11px] font-medium text-[var(--mtr-text)]
           flex items-center justify-between cursor-pointer transition-all duration-200
           ${isOpen ? 'border-[var(--mtr-green)] shadow-[0_0_10px_rgba(0,168,107,0.1)]' : 'border-[var(--mtr-border-lt)] hover:border-[var(--mtr-green)]'}
         `}
       >
-        <span className="truncate">{selectedOption.label}</span>
+        <span className="truncate max-[680px]:pr-1">{selectedOption.label}</span>
         <svg 
-          className={`w-2.5 h-2.5 text-[var(--mtr-muted)] transition-transform duration-200 ${isOpen ? 'rotate-180 text-[var(--mtr-green)]' : ''}`} 
+          className={`w-2.5 h-2.5 text-[var(--mtr-muted)] flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-[var(--mtr-green)]' : ''}`} 
           xmlns="http://www.w3.org/2000/svg" 
           viewBox="0 0 10 6" 
           fill="none"
@@ -76,7 +77,7 @@ function CustomDropdown({ options, value, onChange, id, placeholder, activeDropd
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 mt-1.5 bg-[var(--mtr-inner)] border border-[var(--mtr-green)] rounded-lg shadow-2xl z-50 flex flex-col overflow-hidden">
+        <div className="absolute left-0 right-0 mt-1.5 bg-[var(--mtr-inner)] border border-[var(--mtr-green)] rounded-lg shadow-2xl z-50 flex flex-col overflow-hidden max-[680px]:min-w-[120px]">
           <div className="p-2 border-b border-[var(--mtr-border-lt)] bg-[rgba(255,255,255,0.02)]">
             <input
               type="text"
@@ -102,7 +103,7 @@ function CustomDropdown({ options, value, onChange, id, placeholder, activeDropd
                       setActiveDropdown(null);
                     }}
                     className={`
-                      px-3 py-2 text-[12px] cursor-pointer transition-colors duration-150 truncate
+                      px-3 py-2 text-[12px] max-[680px]:text-[11px] cursor-pointer transition-colors duration-150 truncate
                       ${isSelected 
                         ? 'bg-[rgba(0,168,107,0.08)] text-[var(--mtr-green)] font-semibold' 
                         : 'text-[var(--mtr-text)] hover:bg-[rgba(0,168,107,0.15)] hover:text-[var(--mtr-green)]'}
@@ -127,7 +128,7 @@ export default function BrokerRankings({ initialBrokers }: Props) {
   const [search, setSearch] = useState('');
   const [tier, setTier] = useState('');
   const [region, setRegion] = useState('');
-  const [status, setStatus] = useState('legitimate');
+  const [status, setStatus] = useState('');
   const [sortField, setSortField] = useState('score');
   const [sortDir, setSortDir] = useState<{ [key: string]: 'asc' | 'desc' }>({ rank: 'asc', score: 'desc', popular: 'desc', name: 'asc' });
   
@@ -135,16 +136,16 @@ export default function BrokerRankings({ initialBrokers }: Props) {
   const [pageSize, setPageSize] = useState(20);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  // Live vote counts dari Realtime: { brokerUuid: totalVotes }
+  // Live vote counts dari Realtime
   const [liveVotes, setLiveVotes] = useState<Record<string, number>>({});
 
-  // Subscribe Realtime — broadcast cuma row yang berubah
+  // Subscribe Realtime
   const handleVoteUpdate = useCallback((uuid: string, totalVotes: number) => {
     setLiveVotes(prev => ({ ...prev, [uuid]: totalVotes }));
   }, []);
   useVoteRealtime(handleVoteUpdate);
 
-  // Generate Opsi Dinamis berdasarkan isi kolom data Supabase
+  // Generate Opsi Dinamis
   const dynamicTiers = useMemo(() => {
     const uniqueTiers = new Set(initialBrokers.map(b => b.regulation_tier).filter(Boolean));
     const options = Array.from(uniqueTiers).sort().map(t => ({ value: t, label: t }));
@@ -157,7 +158,6 @@ export default function BrokerRankings({ initialBrokers }: Props) {
     return [{ value: '', label: 'All Regions' }, ...options];
   }, [initialBrokers]);
 
-  // Helper: ambil current vote count (live override SSR initial)
   const getVoteCount = useCallback((broker: any): number => {
     if (liveVotes[broker.uuid] !== undefined) return liveVotes[broker.uuid];
     return broker.total_votes ?? 0;
@@ -280,6 +280,9 @@ export default function BrokerRankings({ initialBrokers }: Props) {
             activeDropdown={activeDropdown}
             setActiveDropdown={setActiveDropdown}
           />
+
+          {/* FIX: Tembok pembatas ini cuma muncul di mobile buat maksa tombol Sorting turun ke baris baru */}
+          <div className="hidden max-[680px]:block basis-full h-0"></div>
 
           <div className="mtr-sort-group">
             <button className={`mtr-sort-btn ${sortField === 'score' ? 'active' : ''}`} onClick={() => handleSort('score')}>★ Score</button>
