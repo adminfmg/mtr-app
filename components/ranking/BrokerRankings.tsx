@@ -228,11 +228,11 @@ export default function BrokerRankings({ initialBrokers }: Props) {
             <span className="mtr-hero-stat-label">Retail Brokers</span>
           </div>
           <div className="mtr-hero-stat">
-            <span className="mtr-hero-stat-num"><b>{uniqueCountries}</b>+</span>
+            <span className="mtr-hero-stat-num"><b>{uniqueCountries}+</b></span>
             <span className="mtr-hero-stat-label">Countries</span>
           </div>
           <div className="mtr-hero-stat">
-            <span className="mtr-hero-stat-num"><b>100</b>%</span>
+            <span className="mtr-hero-stat-num"><b>100%</b></span>
             <span className="mtr-hero-stat-label">Independent</span>
           </div>
         </div>
