@@ -1,5 +1,6 @@
 import '@/styles/comparison.css';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { getBrokers } from '@/lib/brokers/queries';
 import BrokerComparison from '@/components/comparison/BrokerComparison';
 
@@ -15,7 +16,9 @@ export default async function ComparisonPage() {
   
   return (
     <main className="w-full">
-      <BrokerComparison initialBrokers={brokers} />
+      <Suspense fallback={<div className="mtr-cmp-empty" style={{ minHeight: '50vh' }}><p>Loading comparison data...</p></div>}>
+        <BrokerComparison initialBrokers={brokers} />
+      </Suspense>
     </main>
   );
 }
