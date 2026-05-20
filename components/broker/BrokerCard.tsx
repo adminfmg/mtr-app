@@ -7,7 +7,7 @@ import { Tooltip } from '@/components/ui/Tooltip';
 
 interface BrokerCardProps {
   broker: any;
-  rank: number;
+  rank: number; // Ini dari map UI, kita jadikan fallback kalau rank DB kosong
   idx: number;
   /** Live count override dari parent (Realtime subscription) */
   liveCount?: number;
@@ -72,8 +72,11 @@ export default function BrokerCard({ broker, rank, idx, liveCount }: BrokerCardP
     setIsVoting(false);
   };
 
-  // Helpers formatting
-  const rankCls = isInst ? '' : rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+  // --- AMANKAN LOGIKA RANKING DARI SUPABASE (FIELD: broker.rank) ---
+  const dbRank = broker.rank !== undefined && broker.rank !== null ? Number(broker.rank) : null;
+  
+  // Class warna teks angka hanya aktif jika rank di database bernilai 1, 2, atau 3
+  const rankCls = isInst ? '' : dbRank === 1 ? 'gold' : dbRank === 2 ? 'silver' : dbRank === 3 ? 'bronze' : '';
   const scoreColor = score >= 8 ? 'high' : score >= 6.5 ? 'mid' : 'low';
   
   const spread = parseFloat(broker.eur_usd_spread);
@@ -93,11 +96,6 @@ export default function BrokerCard({ broker, rank, idx, liveCount }: BrokerCardP
     }
   } catch(e) {}
 
-  // Logo fallback chain (priority):
-  //   1. broker.logo_url (custom dari tim design)
-  //   2. Clearbit Logo API
-  //   3. Google Favicon (via onerror)
-  //   4. Circle initial (kalau ga ada domain sama sekali)
   const customLogo = broker.logo_url || null;
   const fallbackChain = customLogo
     ? customLogo
@@ -108,7 +106,6 @@ export default function BrokerCard({ broker, rank, idx, liveCount }: BrokerCardP
     ? `this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=${domain}&sz=128';`
     : `this.onerror=null;this.style.display='none';`;
 
-  // Tooltip text — full number dengan thousand separator (IG-style)
   const voteTooltip = `${votes.toLocaleString()} ${votes === 1 ? 'recommendation' : 'recommendations'}`;
 
   // Logika Normalisasi Data Regulasi (Auto-Split Pipe '|')
@@ -121,16 +118,24 @@ export default function BrokerCard({ broker, rank, idx, liveCount }: BrokerCardP
 
   return (
     <div className={`mtr-card ${isInst ? 'mtr-inst' : ''}`} style={{ animationDelay: `${Math.min(rank * 0.018, 0.28)}s` }}>
+      {/* Warna Aksen Kiri dikunci murni berdasarkan dbRank (data asli Supabase) */}
       <div 
         className="mtr-accent" 
         style={{ 
-          background: rank === 1 ? 'var(--mtr-gold)' : 
-                      rank === 2 ? 'var(--mtr-silver)' : 
-                      rank === 3 ? 'var(--mtr-bronze)' : 
+          background: dbRank === 1 ? 'var(--mtr-gold)' : 
+                      dbRank === 2 ? 'var(--mtr-silver)' : 
+                      dbRank === 3 ? 'var(--mtr-bronze)' : 
                       'transparent' 
         }}
       ></div>
-      <div className="mtr-rank-col"><span className={`mtr-rank-num ${rankCls}`}>{isInst ? '—' : rank}</span></div>
+      
+      {/* Angka Rank menampilkan dbRank asli dari database (jika kosong baru fallback ke rank UI) */}
+      <div className="mtr-rank-col">
+        <span className={`mtr-rank-num ${rankCls}`}>
+          {isInst ? '—' : (dbRank ?? rank)}
+        </span>
+      </div>
+
       {fallbackChain ? (
         <div 
           className="mtr-logo-col" 
@@ -161,18 +166,14 @@ export default function BrokerCard({ broker, rank, idx, liveCount }: BrokerCardP
         <div className="mtr-dbox mtr-dbox-reg">
           <div className="mtr-dbox-label">Regulation</div>
           <div className="mtr-lic-tags">
-            {/* Tampilkan Maksimal 2 Pills Utama */}
             {parsedRegulations.slice(0, 2).map((l: string, i: number) => (
               <span key={i} className="mtr-lic-tag">{l}</span>
             ))}
-            
-            {/* Render Counter Badge Berbasis Flexbox Jika Jumlah Data Lebih Dari 2 */}
             {parsedRegulations.length > 2 && (
               <span className="mtr-lic-tag" style={{ opacity: 0.65, fontWeight: 700 }}>
                 +{parsedRegulations.length - 2}
               </span>
             )}
-            
             {parsedRegulations.length === 0 && <span className="mtr-dbox-value muted">—</span>}
           </div>
         </div>
