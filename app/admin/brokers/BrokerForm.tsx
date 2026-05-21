@@ -472,12 +472,14 @@ export function BrokerForm({ broker, mode }: { broker?: Broker; mode: Mode }) {
           </Field>
           <Field label="Score (0-10)">
             <input
-              type="number"
-              step="0.1"
-              min="0"
-              max="10"
-              value={form.score ?? ''}
-              onChange={(e) => setField('score', e.target.value ? parseFloat(e.target.value) : null)}
+              type="text"
+              inputMode="decimal"
+              value={
+                form.score !== null && form.score !== undefined
+                  ? Number(form.score).toFixed(3)
+                  : ''
+              }
+              onChange={(e) => setField('score', e.target.value ? Number(e.target.value).toFixed(3) as any : null)}
               style={inputStyle}
             />
           </Field>

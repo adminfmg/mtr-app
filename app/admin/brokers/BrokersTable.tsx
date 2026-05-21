@@ -113,7 +113,11 @@ export function BrokersTable({ brokers }: { brokers: Broker[] }) {
                 <tr key={b.uuid} style={{ borderTop: '1px solid #1A2E45' }}>
                   <td className="p-3">{b.rank ?? '—'}</td>
                   <td className="p-3 font-medium">{b.name}</td>
-                  <td className="p-3">{b.score ?? '—'}</td>
+                  <td className="p-3">
+                    {b.score !== null && b.score !== undefined
+                      ? Number(b.score).toFixed(3)
+                      : '—'}
+                  </td>
                   <td className="p-3">{b.regulation_tier ?? '—'}</td>
                   <td className="p-3">
                     {b.deleted_at ? (
