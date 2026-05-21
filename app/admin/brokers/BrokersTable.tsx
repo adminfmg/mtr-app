@@ -12,14 +12,30 @@ export function BrokersTable({ brokers }: { brokers: Broker[] }) {
 
   const filtered = useMemo(() => {
     let r = brokers;
+
     if (search) {
       const q = search.toLowerCase();
       r = r.filter((b) => b.name.toLowerCase().includes(q));
     }
-    if (filter === 'active') r = r.filter((b) => !b.deleted_at);
-    if (filter === 'deleted') r = r.filter((b) => b.deleted_at);
-    if (filter === 'hidden') r = r.filter((b) => !b.deleted_at && b.is_published === false);
-    return r;
+
+    if (filter === 'active') {
+      r = r.filter((b) => !b.deleted_at);
+    }
+
+    if (filter === 'deleted') {
+      r = r.filter((b) => b.deleted_at);
+    }
+
+    if (filter === 'hidden') {
+      r = r.filter((b) => !b.deleted_at && b.is_published === false);
+    }
+
+    return [...r].sort((a, b) => {
+      const scoreA = Number(a.score ?? 0);
+      const scoreB = Number(b.score ?? 0);
+
+      return scoreB - scoreA;
+    });
   }, [brokers, search, filter]);
 
   async function handleSoftDelete(uuid: string, name: string) {
@@ -109,9 +125,9 @@ export function BrokersTable({ brokers }: { brokers: Broker[] }) {
                 </td>
               </tr>
             ) : (
-              filtered.map((b) => (
+              filtered.map((b, index) => (
                 <tr key={b.uuid} style={{ borderTop: '1px solid #1A2E45' }}>
-                  <td className="p-3">{b.rank ?? '—'}</td>
+                  <td className="p-3">{index + 1}</td>
                   <td className="p-3 font-medium">{b.name}</td>
                   <td className="p-3">
                     {b.score !== null && b.score !== undefined
