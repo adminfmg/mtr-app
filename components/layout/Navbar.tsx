@@ -24,7 +24,7 @@ export default function Navbar() {
     <header className="sticky top-[32px] z-50 w-full transition-all duration-300 mt-[32px] font-[Gantari,sans-serif]">
       <div className="max-w-[1140px] mx-auto px-4">
         <div
-          className={`flex items-center justify-between px-4 py-6 rounded-[20px] transition-all duration-300 backdrop-blur-md bg-[rgba(255,255,255,0.1)] ${
+          className={`flex items-center justify-between px-4 py-4 rounded-[20px] transition-all duration-300 backdrop-blur-md bg-[rgba(255,255,255,0.1)] ${
             isScrolled
               ? "shadow-lg border border-white/20"
               : "border border-transparent"
