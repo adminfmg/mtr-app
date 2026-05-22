@@ -8,11 +8,12 @@ interface Props {
   initialBrokers: any[];
 }
 
-const statusOptions = [
-  { value: '', label: 'All Status' },
-  { value: 'legitimate', label: 'Retail Brokers' },
-  { value: 'institution', label: 'Institutions' },
-];
+// HIDDEN: statusOptions — kalau bos minta balik, uncomment di JSX bawah
+// const statusOptions = [
+//   { value: '', label: 'All Status' },
+//   { value: 'legitimate', label: 'Retail Brokers' },
+//   { value: 'institution', label: 'Institutions' },
+// ];
 
 /* =====================================================
    CUSTOM SEARCHABLE DROPDOWN
@@ -125,11 +126,21 @@ function CustomDropdown({ options, value, onChange, id, placeholder, activeDropd
    ===================================================== */
 export default function BrokerRankings({ initialBrokers }: Props) {
   const [search, setSearch] = useState('');
-  const [tier, setTier] = useState('');
+  // HIDDEN: tier & status state — kalau bos minta balik, uncomment
+  // const [tier, setTier] = useState('');
+  // const [status, setStatus] = useState('');
   const [region, setRegion] = useState('');
-  const [status, setStatus] = useState('');
   const [sortField, setSortField] = useState('score');
-  const [sortDir, setSortDir] = useState<{ [key: string]: 'asc' | 'desc' }>({ rank: 'asc', score: 'desc', popular: 'desc', name: 'asc' });
+  const [sortDir, setSortDir] = useState<{ [key: string]: 'asc' | 'desc' }>({
+    rank: 'asc',
+    score: 'desc',
+    popular: 'desc',
+    name: 'asc',
+    min_deposit: 'asc',
+    leverage: 'desc',
+    spreads: 'asc',
+    instruments: 'desc',
+  });
   
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -142,11 +153,12 @@ export default function BrokerRankings({ initialBrokers }: Props) {
   }, []);
   useVoteRealtime(handleVoteUpdate);
 
-  const dynamicTiers = useMemo(() => {
-    const uniqueTiers = new Set(initialBrokers.map(b => b.regulation_tier).filter(Boolean));
-    const options = Array.from(uniqueTiers).sort().map(t => ({ value: t, label: t }));
-    return [{ value: '', label: 'All Tiers' }, ...options];
-  }, [initialBrokers]);
+  // HIDDEN: dynamicTiers — uncomment kalau Tier dropdown dipake lagi
+  // const dynamicTiers = useMemo(() => {
+  //   const uniqueTiers = new Set(initialBrokers.map(b => b.regulation_tier).filter(Boolean));
+  //   const options = Array.from(uniqueTiers).sort().map(t => ({ value: t, label: t }));
+  //   return [{ value: '', label: 'All Tiers' }, ...options];
+  // }, [initialBrokers]);
 
   const dynamicRegions = useMemo(() => {
     const uniqueRegions = new Set(initialBrokers.map(b => b.hq_country).filter(Boolean));
@@ -158,6 +170,15 @@ export default function BrokerRankings({ initialBrokers }: Props) {
     if (liveVotes[broker.uuid] !== undefined) return liveVotes[broker.uuid];
     return broker.total_votes ?? 0;
   }, [liveVotes]);
+
+  // Helper: parse instruments string ke angka (utk sort)
+  const parseInstrumentsCount = (val: any): number => {
+    if (val === null || val === undefined) return 0;
+    if (typeof val === 'number') return val;
+    const str = String(val);
+    const match = str.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
 
   // LOGIC FINAL: KALKULASI RANKING GLOBAL BERDASARKAN SCORE TERTINGGI (100% AMAN & CEPAT)
   const globalRankMap = useMemo(() => {
@@ -184,38 +205,88 @@ export default function BrokerRankings({ initialBrokers }: Props) {
   // Main Filter & Sort Logic
   const filteredBrokers = useMemo(() => {
     let result = initialBrokers.filter(b => {
-      const bStatus = b.status || '';
-      const bTier = b.regulation_tier || '';
+      // HIDDEN: filter status & tier — uncomment kalau dropdown balik
+      // const bStatus = b.status || '';
+      // const bTier = b.regulation_tier || '';
+      // if (status && bStatus !== status) return false;
+      // if (tier && bTier !== tier) return false;
+      
       const bCountry = b.hq_country || '';
       const bName = b.name || '';
       
-      if (status && bStatus !== status) return false;
-      if (tier && bTier !== tier) return false;
       if (region && bCountry !== region) return false;
       if (search && ![bName, b.legal_name, bCountry].join(' ').toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
 
     result.sort((a, b) => {
+      const nameTiebreak = (a.name || '').localeCompare(b.name || '');
+
       if (sortField === 'score') {
         const diff = (parseFloat(b.score) || 0) - (parseFloat(a.score) || 0);
         if (diff !== 0) return sortDir.score === 'desc' ? diff : -diff;
-        return (a.name || '').localeCompare(b.name || '');
+        return nameTiebreak;
       }
       if (sortField === 'popular') {
         const diff = getVoteCount(b) - getVoteCount(a);
         if (diff !== 0) return sortDir.popular === 'desc' ? diff : -diff;
-        return (a.name || '').localeCompare(b.name || '');
+        return nameTiebreak;
       }
       if (sortField === 'name') {
-        const diff = (a.name || '').localeCompare(b.name || '');
-        return sortDir.name === 'asc' ? diff : -diff;
+        return sortDir.name === 'asc' ? nameTiebreak : -nameTiebreak;
+      }
+      if (sortField === 'min_deposit') {
+        const aVal = parseFloat(a.min_deposit);
+        const bVal = parseFloat(b.min_deposit);
+        const aNaN = isNaN(aVal);
+        const bNaN = isNaN(bVal);
+        // Null/NaN dilempar ke belakang
+        if (aNaN && bNaN) return nameTiebreak;
+        if (aNaN) return 1;
+        if (bNaN) return -1;
+        const diff = aVal - bVal;
+        if (diff !== 0) return sortDir.min_deposit === 'asc' ? diff : -diff;
+        return nameTiebreak;
+      }
+      if (sortField === 'leverage') {
+        const aVal = parseFloat(a.max_leverage);
+        const bVal = parseFloat(b.max_leverage);
+        const aNaN = isNaN(aVal);
+        const bNaN = isNaN(bVal);
+        if (aNaN && bNaN) return nameTiebreak;
+        if (aNaN) return 1;
+        if (bNaN) return -1;
+        const diff = bVal - aVal;
+        if (diff !== 0) return sortDir.leverage === 'desc' ? diff : -diff;
+        return nameTiebreak;
+      }
+      if (sortField === 'spreads') {
+        const aVal = parseFloat(a.eur_usd_spread);
+        const bVal = parseFloat(b.eur_usd_spread);
+        const aNaN = isNaN(aVal);
+        const bNaN = isNaN(bVal);
+        if (aNaN && bNaN) return nameTiebreak;
+        if (aNaN) return 1;
+        if (bNaN) return -1;
+        const diff = aVal - bVal;
+        if (diff !== 0) return sortDir.spreads === 'asc' ? diff : -diff;
+        return nameTiebreak;
+      }
+      if (sortField === 'instruments') {
+        const aVal = parseInstrumentsCount(a.instruments);
+        const bVal = parseInstrumentsCount(b.instruments);
+        if (aVal === 0 && bVal === 0) return nameTiebreak;
+        if (aVal === 0) return 1;
+        if (bVal === 0) return -1;
+        const diff = bVal - aVal;
+        if (diff !== 0) return sortDir.instruments === 'desc' ? diff : -diff;
+        return nameTiebreak;
       }
       return 0; 
     });
 
     return result;
-  }, [initialBrokers, search, tier, region, status, sortField, sortDir, getVoteCount]);
+  }, [initialBrokers, search, region, sortField, sortDir, getVoteCount]);
 
   const total = filteredBrokers.length;
   const totalPages = Math.ceil(total / pageSize);
@@ -267,9 +338,15 @@ export default function BrokerRankings({ initialBrokers }: Props) {
             <input type="text" placeholder="Search broker name, regulator…" value={search} onChange={e => {setSearch(e.target.value); setCurrentPage(1);}} />
           </div>
           
+          {/* HIDDEN: Tier dropdown — uncomment kalau bos minta balik
           <CustomDropdown id="tier" placeholder="tier" options={dynamicTiers} value={tier} onChange={(val) => { setTier(val); setCurrentPage(1); }} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
+          */}
+          
           <CustomDropdown id="region" placeholder="region" options={dynamicRegions} value={region} onChange={(val) => { setRegion(val); setCurrentPage(1); }} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
+          
+          {/* HIDDEN: Status dropdown — uncomment kalau bos minta balik
           <CustomDropdown id="status" placeholder="status" options={statusOptions} value={status} onChange={(val) => { setStatus(val); setCurrentPage(1); }} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
+          */}
 
           <div className="hidden max-[680px]:block basis-full h-0"></div>
 
@@ -277,6 +354,10 @@ export default function BrokerRankings({ initialBrokers }: Props) {
             <button className={`mtr-sort-btn ${sortField === 'score' ? 'active' : ''}`} onClick={() => handleSort('score')}>★ Score</button>
             <button className={`mtr-sort-btn ${sortField === 'popular' ? 'active' : ''}`} onClick={() => handleSort('popular')}>👍 Popular</button>
             <button className={`mtr-sort-btn ${sortField === 'name' ? 'active' : ''}`} onClick={() => handleSort('name')}>A–Z</button>
+            <button className={`mtr-sort-btn ${sortField === 'min_deposit' ? 'active' : ''}`} onClick={() => handleSort('min_deposit')}>💵 Min Deposit</button>
+            <button className={`mtr-sort-btn ${sortField === 'leverage' ? 'active' : ''}`} onClick={() => handleSort('leverage')}>⚡ Leverage</button>
+            <button className={`mtr-sort-btn ${sortField === 'spreads' ? 'active' : ''}`} onClick={() => handleSort('spreads')}>📉 Spreads</button>
+            <button className={`mtr-sort-btn ${sortField === 'instruments' ? 'active' : ''}`} onClick={() => handleSort('instruments')}>📊 Instruments</button>
           </div>
           <div className="mtr-count-label">{total} broker{total !== 1 ? 's' : ''}</div>
         </div>
