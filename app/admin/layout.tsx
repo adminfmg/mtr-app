@@ -42,6 +42,7 @@ export default async function AdminLayout({
           <NavLink href="/admin/brokers/import">Import CSV</NavLink>
         )}
         <NavLink href="/admin/boost">Vote Boost</NavLink>
+        <NavLink href="/admin/submissions">Submissions</NavLink>
 
         <div className="mt-auto pt-6 border-t" style={{ borderColor: '#1A2E45' }}>
           <form action="/api/admin/auth" method="POST">
