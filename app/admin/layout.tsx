@@ -37,10 +37,6 @@ export default async function AdminLayout({
 
         <NavLink href="/admin">Dashboard</NavLink>
         <NavLink href="/admin/brokers">Brokers</NavLink>
-        <NavLink href="/admin/brokers/new">Add Broker</NavLink>
-        {session.role === 'owner' && (
-          <NavLink href="/admin/brokers/import">Import CSV</NavLink>
-        )}
         <NavLink href="/admin/boost">Vote Boost</NavLink>
         <NavLink href="/admin/reviews">Reviews</NavLink>
         <NavLink href="/admin/submissions">Submissions</NavLink>

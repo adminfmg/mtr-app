@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getBrokersAdminPaginated } from '@/lib/admin/queries';
+import { getAdminUser } from '@/lib/admin/auth';
 import { BrokersTable } from './BrokersTable';
 import { BrokersPagination } from './BrokersPagination';
 
@@ -18,6 +19,7 @@ export default async function BrokersListPage({
   searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
+  const session = await getAdminUser();
 
   const perPageRaw = parseInt(params.per_page || '20', 10);
   const perPage = ALLOWED_PER_PAGE.includes(perPageRaw) ? perPageRaw : 20;
@@ -33,20 +35,35 @@ export default async function BrokersListPage({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold">Brokers</h1>
           <p className="text-sm mt-1" style={{ color: '#7A8FA6' }}>
             {total} brokers total (including soft-deleted).
           </p>
         </div>
-        <Link
-          href="/admin/brokers/new"
-          className="px-4 py-2 rounded font-medium"
-          style={{ background: '#00A86B', color: '#fff' }}
-        >
-          + Add Broker
-        </Link>
+        <div className="flex items-center gap-2">
+          {session?.role === 'owner' && (
+            <Link
+              href="/admin/brokers/import"
+              className="px-4 py-2 rounded font-medium"
+              style={{
+                background: 'transparent',
+                color: '#E8EDF4',
+                border: '1px solid #1A2E45',
+              }}
+            >
+              ⬆ Import CSV
+            </Link>
+          )}
+          <Link
+            href="/admin/brokers/new"
+            className="px-4 py-2 rounded font-medium"
+            style={{ background: '#00A86B', color: '#fff' }}
+          >
+            + Add Broker
+          </Link>
+        </div>
       </div>
 
       <BrokersTable brokers={brokers} startNumber={showingFrom} />
