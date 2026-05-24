@@ -265,7 +265,7 @@ export default function BrokerReviews({ brokerUuid, brokerName, initialReviews, 
                     <div key={star} className="flex items-center gap-3 text-xs text-[#a9bcde]">
                       <span className="w-12">{star} Stars</span>
                       <div className="flex-1 h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#00A86B] transition-all" style={{ width: `${percent}%` }} />
+                        <div className="h-full bg-[#FFC107] transition-all duration-500" style={{ width: `${percent}%` }} />
                       </div>
                       <span className="w-10 text-right">{Math.round(percent)}%</span>
                     </div>
@@ -276,29 +276,63 @@ export default function BrokerReviews({ brokerUuid, brokerName, initialReviews, 
           </div>
 
           {/* Sort + filter */}
-          <div className="flex items-center gap-3 mb-4">
-            <h3 className="font-semibold text-white">All Reviews ({reviews.length})</h3>
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-              className="ml-auto bg-[#0A1220] border border-[rgba(255,255,255,0.12)] text-white text-sm rounded-md px-3 py-1.5 focus:outline-none focus:border-[#00A86B]"
-            >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="highest">Highest Rating</option>
-              <option value="lowest">Lowest Rating</option>
-            </select>
-            <button
-              type="button"
-              onClick={() => setFilterRating(null)}
-              className={`text-xs px-3 py-1.5 rounded-full border transition ${
-                filterRating === null
-                  ? 'bg-[rgba(0,168,107,0.12)] border-[#00A86B] text-[#00A86B]'
-                  : 'border-[rgba(255,255,255,0.22)] text-[#a9bcde] hover:text-white'
-              }`}
-            >
-              All ({reviews.length})
-            </button>
+          <div className="mb-6">
+            <h3 className="font-semibold text-white text-lg mb-3">All Reviews ({reviews.length})</h3>
+            
+            {/* KUNCI: Tambah w-full dan justify-between biar mentok kiri & mentok kanan */}
+            <div className="flex flex-wrap items-center justify-between gap-4 w-full">
+              
+              {/* Dropdown Sort - Tetap di Kiri */}
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                className="bg-[#0A1220] border border-[rgba(255,255,255,0.12)] text-white text-sm rounded-md px-3 py-1.5 focus:outline-none focus:border-[#00A86B] min-w-[130px]"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="highest">Highest Rating</option>
+                <option value="lowest">Lowest Rating</option>
+              </select>
+
+              {/* Filter Buttons - Otomatis kelempar Mentok Kanan */}
+              <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                {/* Tombol All */}
+                <button
+                  type="button"
+                  onClick={() => setFilterRating(null)}
+                  className={`text-[11px] font-medium px-3 py-1.5 rounded-full border transition whitespace-nowrap ${
+                    filterRating === null
+                      ? 'bg-[rgba(0,168,107,0.1)] border-[#00A86B] text-[#00A86B]'
+                      : 'bg-[#0A1220] border-[rgba(255,255,255,0.12)] text-[#a9bcde] hover:border-[rgba(255,255,255,0.3)] hover:text-white'
+                  }`}
+                >
+                  All ({reviews.length})
+                </button>
+
+                {/* Tombol Bintang 5 ke 1 */}
+                {[5, 4, 3, 2, 1].map((star) => {
+                  const count = stats.distribution[star as 1 | 2 | 3 | 4 | 5];
+                  return (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setFilterRating(star)}
+                      className={`flex items-center gap-1 text-[11px] font-medium px-2.5 py-1.5 rounded-full border transition whitespace-nowrap ${
+                        filterRating === star
+                          ? 'bg-[rgba(0,168,107,0.1)] border-[#00A86B] text-white'
+                          : 'bg-[#0A1220] border-[rgba(255,255,255,0.12)] text-[#a9bcde] hover:border-[rgba(255,255,255,0.3)] hover:text-white'
+                      }`}
+                    >
+                      {star} 
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="#FFC107" stroke="#FFC107" strokeWidth="1">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                      </svg>
+                      ({count})
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Reviews list */}
