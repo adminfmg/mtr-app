@@ -14,6 +14,7 @@ interface Sample {
   rating: number;
   guest_name: string;
   guest_email: string;
+  review_text: string;
 }
 
 export function BulkReviewForm({ brokers }: { brokers: Broker[] }) {
@@ -306,23 +307,28 @@ export function BulkReviewForm({ brokers }: { brokers: Broker[] }) {
             for <strong style={{ color: '#E8EDF4' }}>{selected?.name}</strong>. Sample of 5 generated entries:
           </p>
 
-          <div className="space-y-2 mb-5">
+          <div className="space-y-3 mb-5">
             {preview.sample.map((s, i) => (
-              <div
+                <div
                 key={i}
-                className="flex items-center gap-3 p-3 rounded text-sm"
+                className="p-3 rounded text-sm"
                 style={{ background: '#0A1220', border: '1px solid #1A2E45' }}
-              >
-                <div className="flex gap-0.5 w-28">
-                  {Array.from({ length: s.rating }, (_, j) => (
-                    <StarIcon key={j} size={14} />
-                  ))}
+                >
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="flex gap-0.5 w-28">
+                    {Array.from({ length: s.rating }, (_, j) => (
+                        <StarIcon key={j} size={14} />
+                    ))}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate" style={{ color: '#E8EDF4' }}>{s.guest_name}</div>
+                    <div className="text-xs truncate" style={{ color: '#7A8FA6' }}>{s.guest_email}</div>
+                    </div>
                 </div>
-                <div className="flex-1">
-                  <div className="font-medium" style={{ color: '#E8EDF4' }}>{s.guest_name}</div>
-                  <div className="text-xs" style={{ color: '#7A8FA6' }}>{s.guest_email}</div>
+                <p className="text-xs leading-relaxed" style={{ color: '#a9bcde' }}>
+                    {s.review_text}
+                </p>
                 </div>
-              </div>
             ))}
           </div>
 
