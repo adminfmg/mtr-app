@@ -241,7 +241,7 @@ export default function BrokerReviews({ brokerUuid, brokerName, initialReviews, 
           </div>
           <div>
             <div className="text-lg font-bold text-white leading-tight">{stats.total} Reviews</div>
-            <div className="text-xs text-[#a9bcde]">Average Rating</div>
+            <div className="text-xs text-[#a9bcde]">Total Verified Reviews</div>
           </div>
         </div>
       </div>
@@ -251,12 +251,32 @@ export default function BrokerReviews({ brokerUuid, brokerName, initialReviews, 
         <div>
           {/* Stats box */}
           <div className="bg-[#0A1220] border border-[rgba(255,255,255,0.12)] rounded-lg p-5 mb-6">
-            <div className="grid grid-cols-[100px_1fr] gap-5 items-center">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white leading-none mb-2">{stats.average.toFixed(1)}</div>
-                <StarRating rating={stats.average} size={14} />
-                <div className="text-xs text-[#a9bcde] mt-2">Out of 5</div>
+            <div className="grid grid-cols-[120px_1fr] gap-5 items-center">
+              {/* Kiri: Score, Out of 5, Bintang, Status */}
+              <div className="text-center flex flex-col items-center justify-center">
+                <div className="text-4xl md:text-5xl font-extrabold text-white leading-none mb-1">
+                  {stats.average.toFixed(1)}
+                </div>
+                <div className="text-[11px] text-[#a9bcde] mb-2 uppercase tracking-widest font-semibold">
+                  Out of 5
+                </div>
+                <StarRating rating={stats.average} size={16} />
+                <div className="text-xs font-bold text-[#FFC107] mt-2 uppercase tracking-wide">
+                  {stats.average >= 4.5
+                    ? 'Excellent'
+                    : stats.average >= 4.0
+                    ? 'Great'
+                    : stats.average >= 3.0
+                    ? 'Average'
+                    : stats.average >= 2.0
+                    ? 'Poor'
+                    : stats.average > 0
+                    ? 'Bad'
+                    : 'No Reviews'}
+                </div>
               </div>
+              
+              {/* Kanan: Progress Bars */}
               <div className="space-y-1.5">
                 {[5, 4, 3, 2, 1].map((star) => {
                   const count = stats.distribution[star as 1 | 2 | 3 | 4 | 5];
