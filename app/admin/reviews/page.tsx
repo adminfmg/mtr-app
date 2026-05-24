@@ -39,13 +39,21 @@ export default async function ReviewsPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Reviews</h1>
-          <p className="text-sm mt-1" style={{ color: '#7A8FA6' }}>
-            {reviews?.length || 0} reviews shown
-            {pendingCount ? ` • ${pendingCount} pending` : ''}
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold">Reviews</h1>
+        <p className="text-sm mt-1" style={{ color: '#7A8FA6' }}>
+          {reviews?.length || 0} reviews shown
+          {pendingCount ? ` • ${pendingCount} pending` : ''}
+        </p>
+      </div>
+      <div className="flex gap-3">
+        <Link
+          href="/admin/reviews/bulk"
+          className="px-4 py-2 rounded font-medium border"
+          style={{ borderColor: '#00A86B', color: '#00A86B' }}
+        >
+          Bulk Add
+        </Link>
         <Link
           href="/admin/reviews/new"
           className="px-4 py-2 rounded font-medium"
@@ -54,6 +62,7 @@ export default async function ReviewsPage({
           + Add Review
         </Link>
       </div>
+    </div>
 
       {/* Filters */}
       <div className="flex gap-3 mb-4 flex-wrap">
