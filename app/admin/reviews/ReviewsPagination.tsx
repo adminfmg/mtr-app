@@ -12,6 +12,7 @@ interface Props {
   currentStatus: string;
   currentSource: string;
   currentBrokerUuid: string;
+  currentRating: number;
   currentSearch: string;
 }
 
@@ -27,6 +28,7 @@ export function ReviewsPagination({
   currentStatus,
   currentSource,
   currentBrokerUuid,
+  currentRating,
   currentSearch,
 }: Props) {
   const router = useRouter();
@@ -37,6 +39,7 @@ export function ReviewsPagination({
       status: currentStatus,
       source: currentSource,
       broker_uuid: currentBrokerUuid,
+      rating: currentRating ? String(currentRating) : '',
       q: currentSearch,
       page: String(currentPage),
       per_page: String(perPage),

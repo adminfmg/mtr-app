@@ -13,6 +13,7 @@ interface Props {
   currentStatus: string;
   currentSource: string;
   currentBrokerUuid: string;
+  currentRating: number;
   currentSearch: string;
 }
 
@@ -34,6 +35,7 @@ export function ReviewsFilters({
   currentStatus,
   currentSource,
   currentBrokerUuid,
+  currentRating,
   currentSearch,
 }: Props) {
   const router = useRouter();
@@ -57,8 +59,10 @@ export function ReviewsFilters({
       status: currentStatus,
       source: currentSource,
       broker_uuid: currentBrokerUuid,
+      rating: currentRating ? String(currentRating) : '',
       q: search,
       ...updates,
+      page: '1', // reset to page 1 when filter changes
     };
     Object.entries(merged).forEach(([key, value]) => {
       if (value) params.set(key, value);
@@ -189,20 +193,39 @@ export function ReviewsFilters({
         </div>
       </div>
 
-      {/* Row 2: Status + Source pills */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <FilterGroup
-          label="Status"
-          current={currentStatus}
-          options={STATUS_OPTIONS}
-          buildUrl={(value) => buildUrl({ status: value })}
-        />
-        <FilterGroup
-          label="Source"
-          current={currentSource}
-          options={SOURCE_OPTIONS}
-          buildUrl={(value) => buildUrl({ source: value })}
-        />
+      {/* Row 2: Status + Rating + Source filters */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div
+          className="px-3 py-2 rounded-lg"
+          style={{ background: '#0A1220', border: '1px solid #1A2E45' }}
+        >
+          <FilterGroup
+            label="Status"
+            current={currentStatus}
+            options={STATUS_OPTIONS}
+            buildUrl={(value) => buildUrl({ status: value })}
+          />
+        </div>
+        <div
+          className="mx-auto px-3 py-2 rounded-lg"
+          style={{ background: '#0A1220', border: '1px solid #1A2E45' }}
+        >
+          <RatingFilter
+            current={currentRating}
+            buildUrl={(value) => buildUrl({ rating: value ? String(value) : '' })}
+          />
+        </div>
+        <div
+          className="px-3 py-2 rounded-lg"
+          style={{ background: '#0A1220', border: '1px solid #1A2E45' }}
+        >
+          <FilterGroup
+            label="Source"
+            current={currentSource}
+            options={SOURCE_OPTIONS}
+            buildUrl={(value) => buildUrl({ source: value })}
+          />
+        </div>
       </div>
     </div>
   );
@@ -241,6 +264,65 @@ function FilterGroup({
               }}
             >
               {opt.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function RatingFilter({
+  current,
+  buildUrl,
+}: {
+  current: number;
+  buildUrl: (value: number) => string;
+}) {
+  const router = useRouter();
+
+  function StarIcon({ size = 12 }: { size?: number }) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="#FFC107" stroke="#FFC107" strokeWidth="1">
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+      </svg>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs" style={{ color: '#7A8FA6' }}>
+        Rating:
+      </span>
+      <div className="flex gap-1">
+        <button
+          type="button"
+          onClick={() => router.push(buildUrl(0))}
+          className="text-xs px-3 py-1.5 rounded-full border transition"
+          style={{
+            background: current === 0 ? 'rgba(0,168,107,0.12)' : 'transparent',
+            borderColor: current === 0 ? '#00A86B' : 'rgba(255,255,255,0.22)',
+            color: current === 0 ? '#00A86B' : '#7A8FA6',
+          }}
+        >
+          All
+        </button>
+        {[5, 4, 3, 2, 1].map((star) => {
+          const active = current === star;
+          return (
+            <button
+              key={star}
+              type="button"
+              onClick={() => router.push(buildUrl(star))}
+              className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition"
+              style={{
+                background: active ? 'rgba(0,168,107,0.12)' : 'transparent',
+                borderColor: active ? '#00A86B' : 'rgba(255,255,255,0.22)',
+                color: active ? '#00A86B' : '#7A8FA6',
+              }}
+            >
+              {star}
+              <StarIcon />
             </button>
           );
         })}

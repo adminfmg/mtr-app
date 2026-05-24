@@ -11,6 +11,7 @@ interface SearchParams {
   status?: string;
   source?: string;
   broker_uuid?: string;
+  rating?: string;
   q?: string;
   page?: string;
   per_page?: string;
@@ -28,6 +29,8 @@ export default async function ReviewsPage({
   const status = params.status || '';
   const source = params.source || '';
   const brokerUuid = params.broker_uuid || '';
+  const ratingRaw = parseInt(params.rating || '0', 10);
+  const rating = [1, 2, 3, 4, 5].includes(ratingRaw) ? ratingRaw : 0;
   const searchQuery = params.q?.trim() || '';
 
   const perPageRaw = parseInt(params.per_page || '20', 10);
@@ -53,6 +56,7 @@ export default async function ReviewsPage({
   if (status) countQuery = countQuery.eq('status', status);
   if (source) countQuery = countQuery.eq('source', source);
   if (brokerUuid) countQuery = countQuery.eq('broker_uuid', brokerUuid);
+  if (rating) countQuery = countQuery.eq('rating', rating);
   if (searchQuery) {
     countQuery = countQuery.or(
       `guest_name.ilike.%${searchQuery}%,guest_email.ilike.%${searchQuery}%,review_text.ilike.%${searchQuery}%`
@@ -78,6 +82,7 @@ export default async function ReviewsPage({
   if (status) dataQuery = dataQuery.eq('status', status);
   if (source) dataQuery = dataQuery.eq('source', source);
   if (brokerUuid) dataQuery = dataQuery.eq('broker_uuid', brokerUuid);
+  if (rating) dataQuery = dataQuery.eq('rating', rating);
   if (searchQuery) {
     dataQuery = dataQuery.or(
       `guest_name.ilike.%${searchQuery}%,guest_email.ilike.%${searchQuery}%,review_text.ilike.%${searchQuery}%`
@@ -127,6 +132,7 @@ export default async function ReviewsPage({
         currentStatus={status}
         currentSource={source}
         currentBrokerUuid={brokerUuid}
+        currentRating={rating}
         currentSearch={searchQuery}
       />
 
@@ -142,6 +148,7 @@ export default async function ReviewsPage({
         currentStatus={status}
         currentSource={source}
         currentBrokerUuid={brokerUuid}
+        currentRating={rating}
         currentSearch={searchQuery}
       />
     </div>
