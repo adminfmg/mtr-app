@@ -178,7 +178,8 @@ body:has(.aw-wrap) {
 .aw-stats-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background: transparent;
+  /* REVISI: Background diubah jadi Dark Navy Homepage */
+  background: #0F1825; 
   border: 1px solid var(--aw-border);
   border-radius: var(--aw-radius-lg);
   overflow: hidden;
@@ -363,7 +364,7 @@ body:has(.aw-wrap) {
   border: 1px solid var(--aw-border);
   border-bottom: 2px solid var(--aw-green);
   border-radius: var(--aw-radius-lg);
-  background: rgba(0, 0, 0, 0.55);
+  background: #0F1825;
   scroll-snap-align: start;
   overflow: hidden;
   transition: border-color 0.2s, transform 0.2s;
@@ -514,7 +515,7 @@ body:has(.aw-wrap) {
 
 .aw-meth-desc { font-size: 15px; line-height: 1.75; color: var(--aw-muted); }
 
-.aw-meth-editorial { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); background: rgba(0, 0, 0, 0.3); margin-top: 8px; }
+.aw-meth-editorial { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); background: #0F1825; margin-top: 8px; }
 
 .aw-meth-editorial-head { display: flex; align-items: center; gap: 12px; }
 
@@ -558,20 +559,16 @@ body:has(.aw-wrap) {
 
 .aw-part-desc { font-size: 15px; line-height: 1.75; color: var(--aw-muted); max-width: 560px; }
 
-.aw-part-cards { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; margin-bottom: 16px; }
+.aw-part-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
-.aw-part-card { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 32px; border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); background: rgba(0, 0, 0, 0.4); text-align: left; overflow: hidden; }
+.aw-part-card { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 32px; border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); background: #0F1825; text-align: left; overflow: hidden; }
 
 .aw-part-card.aw-part-card-left {
   border-color: var(--aw-green-border);
-  background:
-    url('https://mytradingreviews.com/wp-content/uploads/2026/05/MTR-TROPHY-AWARD.png') left center / auto 100% no-repeat,
-    radial-gradient(ellipse at 0% 60%, rgba(0, 168, 107, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 60%, rgba(0, 168, 107, 0.10) 0%, transparent 50%),
-    rgba(0, 0, 0, 0.5);
+  background: #0F1825;
 }
 
-.aw-part-card.aw-part-card-left .aw-part-card-body { margin-left: 240px; }
+.aw-part-card.aw-part-card-left .aw-part-card-body { margin-left: 0 !important; }
 
 .aw-part-card-body { display: flex; flex-direction: column; gap: 12px; }
 
@@ -595,7 +592,8 @@ body:has(.aw-wrap) {
 .aw-part-timeline {
   border: 1px solid var(--aw-border);
   border-radius: var(--aw-radius-lg);
-  background: rgba(0, 0, 0, 0.3);
+  /* REVISI: Background diubah jadi Dark Navy Homepage */
+  background: #0F1825; 
   overflow: hidden;
 }
 
@@ -712,9 +710,7 @@ body:has(.aw-wrap) {
   .aw-part-desc { max-width: 100%; }
   .aw-part-cards { grid-template-columns: 1fr; }
   .aw-part-card.aw-part-card-left {
-    background:
-      radial-gradient(ellipse at 50% 100%, rgba(0, 168, 107, 0.15) 0%, transparent 60%),
-      rgba(0, 0, 0, 0.5);
+    background: #0F1825;
   }
   .aw-part-card.aw-part-card-left .aw-part-card-body { margin-left: 0; }
   .aw-part-card-title { font-size: 20px; }
