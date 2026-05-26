@@ -63,10 +63,10 @@ export const footerConfig: FooterConfig = {
   copyright: "@ 2026 My Trading Reviews. All rights reserved.",
 
   navLinks: [
-    { label: "Reviews", href: "#", variant: "grey" },
-    { label: "Awards", href: "#", variant: "grey" },
+    { label: "Comparison", href: "/comparison", variant: "white" },
+    { label: "Awards", href: "/awards", variant: "white" },
+    { label: "IB/Affiliate", href: "/ib-affiliate", variant: "white" },
     { label: "Blogs", href: "/blog", variant: "white" },
-    { label: "Comparison", href: "#", variant: "grey" },
     { label: "About Us", href: "/about-us", variant: "white" },
   ],
 
