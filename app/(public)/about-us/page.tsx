@@ -129,7 +129,7 @@ export default function AboutPage() {
       </section>
 
       {/* SECTION 4: CONTACT FORM */}
-      <section className="flex flex-col items-center text-center max-w-3xl mx-auto" aria-label="Get in touch section">
+      {/*<section className="flex flex-col items-center text-center max-w-3xl mx-auto" aria-label="Get in touch section">
         <div className="mb-8">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
             Get In <span className="text-[#00A86B]">Touch</span>
@@ -137,13 +137,13 @@ export default function AboutPage() {
           <p className="text-[#A9BCDE] text-[15px] md:text-base max-w-xl mx-auto opacity-90">
             Our friendly team would love to hear from you. Drop us a message and we'll get back to you as soon as possible.
           </p>
-        </div>
+        </div>*/}
 
         {/* Wrapper Card Form */}
-        <div className="w-full max-w-2xl bg-[#0F1825] border border-white/10 rounded-[20px] p-6 md:p-10 shadow-xl">
+        {/*<div className="w-full max-w-2xl bg-[#0F1825] border border-white/10 rounded-[20px] p-6 md:p-10 shadow-xl">
           <ContactForm />
         </div>
-      </section>
+      </section>*/}
 
     </main>
   );
