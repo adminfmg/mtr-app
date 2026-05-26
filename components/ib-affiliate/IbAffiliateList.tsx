@@ -82,7 +82,7 @@ export default function IbAffiliateList({ initialPrograms }: Props) {
               <a href="#mtr-ib-table-section" className="mtr-ib-btn-primary">
                 View broker deals →
               </a>
-              <a href="#" className="mtr-ib-btn-secondary">How it works</a>
+              {/*<a href="#" className="mtr-ib-btn-secondary">How it works</a>*/}
             </div>
           </div>
 
