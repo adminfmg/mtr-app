@@ -117,6 +117,8 @@
 │   │   ├── VoteButton.tsx
 │   ├── [comparison]
 │   │   ├── BrokerComparison.tsx
+│   ├── [faq]
+│   │   ├── HomepageFAQ.tsx
 │   ├── [forms]
 │   │   ├── InquiryForms.tsx
 │   ├── [ib-affiliate]
