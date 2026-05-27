@@ -219,6 +219,8 @@ a.mtr-trust-person:hover { opacity: 0.7; transform: translateY(-2px); }
   margin: 0; font-size: clamp(22px, 1.8vw, 32px);
   line-height: 1.1; font-weight: 600; color: var(--mtr-text);
   word-break: break-word; display: flex; align-items: flex-start;
+  flex-wrap: wrap; gap: 4px; justify-content: center;
+  align-content: flex-start;
   padding-bottom: 4px; overflow-y: auto;
   -ms-overflow-style: none; scrollbar-width: none;
   -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
@@ -253,6 +255,7 @@ a.mtr-trust-person:hover { opacity: 0.7; transform: translateY(-2px); }
   border: 1px solid var(--mtr-border);
   padding: 4px 12px; font-size: 12px; font-weight: 500; line-height: 1;
   color: var(--mtr-text-muted); background: var(--mtr-surface-2);
+  white-space: nowrap;
 }
 .pill.neutral { background: var(--mtr-surface-2); border-color: var(--mtr-border); color: var(--mtr-text-muted); }
 
@@ -264,6 +267,7 @@ a.mtr-trust-person:hover { opacity: 0.7; transform: translateY(-2px); }
   border: 1px solid rgba(255,255,255,0.22);
   padding: 4px 12px; font-size: 12px; font-weight: 500; line-height: 1;
   color: #b2b2b2; background: #1a1a1a;
+  white-space: nowrap;
 }
 
 .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
