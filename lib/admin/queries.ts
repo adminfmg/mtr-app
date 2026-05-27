@@ -82,3 +82,56 @@ export async function getAdminStats() {
     hidden: hidden.count || 0,
   };
 }
+
+// --- TAMBAHAN UNTUK IB AFFILIATES ---
+
+export async function getIbAffiliatesAdminPaginated(
+  page: number,
+  perPage: number
+) {
+  const supabase = createClient();
+  const from = (page - 1) * perPage;
+  const to = from + perPage - 1;
+
+  const { count } = await supabase
+    .from('ib_affiliates')
+    .select('*', { count: 'exact', head: true });
+
+  const { data, error } = await supabase
+    .from('ib_affiliates')
+    .select('*, brokers(name, is_published)') // Tarik nama broker buat ditampilin di tabel
+    .order('rank', { ascending: true, nullsFirst: false })
+    .range(from, to);
+
+  if (error) {
+    console.error('IB Affiliates paginated fetch error:', error.message);
+    return { ibAffiliates: [], total: 0 };
+  }
+
+  return { ibAffiliates: data || [], total: count || 0 };
+}
+
+export async function getIbAffiliateByUuid(uuid: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('ib_affiliates')
+    .select('*')
+    .eq('uuid', uuid)
+    .maybeSingle();
+
+  if (error) console.error('Get IB Affiliate error:', error.message);
+  return data;
+}
+
+export async function getBrokersForIbDropdown() {
+  const supabase = createClient();
+  // KHUSUS DROPDOWN: Ambil semua yang belum dihapus (termasuk yang is_published: false)
+  const { data, error } = await supabase
+    .from('brokers')
+    .select('uuid, name, is_published')
+    .is('deleted_at', null)
+    .order('name', { ascending: true });
+
+  if (error) console.error('Fetch brokers for dropdown error:', error.message);
+  return data || [];
+}
