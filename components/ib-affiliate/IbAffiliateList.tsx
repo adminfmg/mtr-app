@@ -4,8 +4,10 @@ import React, { useState, useMemo } from 'react';
 import { IbAffiliate } from '@/types/ibAffiliate';
 
 interface Props {
-  initialPrograms: IbAffiliate[];
+  initialPrograms: IbAffiliate[]; 
 }
+
+const MTR_COLORS = ['#00A86B','#0066FF','#7B2FBE','#E53E3E','#D69E2E','#0BC5EA','#F6AD55','#68D391','#F687B3','#76E4F7'];
 
 export default function IbAffiliateList({ initialPrograms }: Props) {
   // --- Filter & Sort State ---
@@ -245,15 +247,52 @@ export default function IbAffiliateList({ initialPrograms }: Props) {
                 ) : (
                   currentBrokers.map((b, i) => {
                     const displayNum = (currentPage - 1) * pageSize + i + 1;
+                    
+                    // --- LOGIC LOGO (Numpang dari data table Brokers) ---
+                    const domain = b.brokers?.domain || '';
+                    const customLogo = b.brokers?.logo_url || null;
+                    
+                    const fallbackChain = customLogo
+                      ? customLogo
+                      : domain
+                        ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
+                        : null;
+                        
+                    const onErrorFallback = `this.onerror=null;this.style.display='none';`;
+                    
+                    const color = (b.brokers?.color && b.brokers?.color !== '--') 
+                      ? b.brokers.color 
+                      : MTR_COLORS[i % MTR_COLORS.length];
+
                     return (
                       <tr key={b.id} className="mtr-ib-row">
                         <td className="mtr-ib-td mtr-ib-td--num">{displayNum}</td>
                         <td className="mtr-ib-td mtr-ib-td--broker">
-                          <div className="mtr-ib-broker-cell">
-                            <div className="mtr-ib-ticker">{b.ticker}</div>
-                            <div>
-                              <div className="mtr-ib-name">{b.name}</div>
-                              <div className="mtr-ib-sub">{b.type} · {b.regulation}</div>
+                          <div className="mtr-ib-broker-wrap">
+                            
+                            {fallbackChain ? (
+                              <div 
+                                className="mtr-ib-logo-box"
+                                suppressHydrationWarning={true}
+                                dangerouslySetInnerHTML={{
+                                  __html: `<img src="${fallbackChain}" onerror="${onErrorFallback}" alt="${b.name}">`
+                                }} 
+                              />
+                            ) : (
+                              <div 
+                                className="mtr-ib-logo-initial" 
+                                style={{ background: color }}
+                              >
+                                {b.name.charAt(0).toUpperCase()}
+                              </div>
+                            )}
+
+                            <div className="mtr-ib-broker-cell">
+                            {/*<div className="mtr-ib-ticker">{b.ticker}</div>*/}
+                              <div>
+                                <div className="mtr-ib-name">{b.name}</div>
+                                <div className="mtr-ib-sub">{b.type} · {b.regulation}</div>
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -320,7 +359,7 @@ export default function IbAffiliateList({ initialPrograms }: Props) {
                     <option value="100">100</option>
                     <option value="500">500</option>
                   </select>
-                  <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--mtr-green)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-(--mtr-green) pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
                 </div>
@@ -541,7 +580,6 @@ export default function IbAffiliateList({ initialPrograms }: Props) {
           </a>
           <a href="#" className="mtr-ib-btn-secondary">
             Talk to the team
-            {/* REVISI: Emoji chat diganti jadi SVG Icon */}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
             </svg>

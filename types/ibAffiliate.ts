@@ -17,4 +17,10 @@ export interface IbAffiliate {
   deleted_at: string | null;
   created_at?: string;
   updated_at?: string;
+  
+  brokers?: {
+    logo_url: string | null;
+    color: string | null;
+    domain: string | null;
+  } | null;
 }

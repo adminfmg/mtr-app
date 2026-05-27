@@ -6,7 +6,7 @@ export async function getIbAffiliates(): Promise<IbAffiliate[]> {
   
   const { data, error } = await supabase
     .from('ib_affiliates')
-    .select('*')
+    .select('*, brokers(logo_url, color, domain)')
     .is('deleted_at', null)
     .eq('is_published', true)
     .order('rank', { ascending: true, nullsFirst: false });
@@ -16,5 +16,5 @@ export async function getIbAffiliates(): Promise<IbAffiliate[]> {
     return [];
   }
 
-  return data as IbAffiliate[];
+  return data;
 }

@@ -82,6 +82,12 @@
 #mtr-ib-root .mtr-ib-td--center { text-align:center; }
 
 /* BROKER CELL */
+#mtr-ib-root .mtr-ib-broker-wrap { display:flex; align-items:center; gap:12px; }
+#mtr-ib-root .mtr-ib-logo-box { width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,0.10); background:#fff; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+#mtr-ib-root .mtr-ib-logo-box img { width:100%; height:100%; object-fit:cover; }
+#mtr-ib-root .mtr-ib-logo-initial { width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,0.10); color:#fff; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+#mtr-ib-root .mtr-ib-broker-cell { display:flex; align-items:center; gap:10px; }
+
 #mtr-ib-root .mtr-ib-broker-cell { display:flex; align-items:center; gap:10px; }
 #mtr-ib-root .mtr-ib-ticker { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:700; color:var(--mtr-green); flex-shrink:0; background:linear-gradient(145deg,#0b1c15,#06120e); border:1px solid rgba(255,255,255,0.10); }
 #mtr-ib-root .mtr-ib-name { font-size:0.88rem; font-weight:700; color:#fff; white-space:nowrap; }
