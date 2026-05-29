@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/shared/supabase/server';
 import { Broker } from '@/types/broker';
-import { client } from '@/sanity/client'; // Pastikan path ini sesuai dengan letak Sanity client lo
+import { client } from '@/sanity/client';
 
 export async function getBrokers(): Promise<Broker[]> {
   const supabase = createClient();
@@ -54,4 +54,28 @@ export async function getBrokerReview(uuid: string) {
     console.error('Sanity fetch error:', error);
     return null;
   }
+}
+
+/**
+ * Lightweight query untuk sitemap.
+ * Cuma return slug + updated_at, ga full broker object.
+ */
+export async function getPublishedBrokerSlugs(): Promise<
+  { slug: string; updated_at: string | null }[]
+> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('brokers')
+    .select('slug, updated_at')
+    .is('deleted_at', null)
+    .eq('is_published', true)
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    console.error('Supabase error (getPublishedBrokerSlugs):', error.message);
+    return [];
+  }
+
+  return data ?? [];
 }
